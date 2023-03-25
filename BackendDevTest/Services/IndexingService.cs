@@ -3,7 +3,7 @@ using BackendDevTest.Models;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace BackendDevTest
+namespace BackendDevTest.Services
 {
     public class IndexingService
     {
@@ -34,7 +34,7 @@ namespace BackendDevTest
                     {
                         var blockRecord = new Block
                         {
-                            BlockNumber = Convert.ToInt32(block.Number,16),
+                            BlockNumber = Convert.ToInt32(block.Number, 16),
                             Hash = block.Hash,
                             GasLimit = Convert.ToInt64(block.GasLimit, 16),
                             GasUsed = Convert.ToInt64(block.GasUsed, 16),
@@ -82,7 +82,7 @@ namespace BackendDevTest
 
                     _logger.LogError(ex, $"Error indexing block {i}");
                 }
-               
+
             }
 
             stopwatch.Stop();

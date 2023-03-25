@@ -1,6 +1,7 @@
 ﻿using BackendDevTest;
 using BackendDevTest.Interfaces;
 using BackendDevTest.Models;
+using BackendDevTest.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
