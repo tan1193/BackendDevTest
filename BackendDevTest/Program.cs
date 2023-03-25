@@ -1,20 +1,28 @@
 ﻿using BackendDevTest;
 using BackendDevTest.Interfaces;
 using BackendDevTest.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-
 var services = new ServiceCollection();
-
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.json")
+    .Build();
 // Configure Etherscan API client
 services.AddHttpClient<IEtherscanClient, EtherscanClient>(client =>
 {
     client.BaseAddress = new Uri("https://api.etherscan.io/api");
 });
+services.AddSingleton(configuration["EtherscanApiKey"]);
+
 
 // Configure database context
-services.AddDbContext<BackenddevtestContext>();
+services.AddDbContext<BackenddevtestContext>(options =>
+    options.UseMySql(configuration.GetConnectionString("DefaultConnection"),
+                               Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql")));
 
 // Configure indexing service
 services.AddTransient<IndexingService>();
@@ -33,7 +41,7 @@ var serviceProvider = services.BuildServiceProvider();
 var indexingService = serviceProvider.GetService<IndexingService>();
 
 // Start indexing
-await indexingService.IndexBlocksAndTransactionsAsync(12100001, 12100010);
+await indexingService.IndexBlocksAndTransactionsAsync(12100001, 12100002);
 
 
 //using Microsoft.Extensions.Configuration;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace BackendDevTest.Models;
 
@@ -18,9 +19,6 @@ public partial class BackenddevtestContext : DbContext
     public virtual DbSet<Block> Blocks { get; set; }
 
     public virtual DbSet<Transaction> Transactions { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=localhost;port=3306;database=backenddevtest;uid=root;password=admin@123", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.32-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

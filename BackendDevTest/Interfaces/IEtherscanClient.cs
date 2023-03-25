@@ -9,8 +9,8 @@ namespace BackendDevTest.Interfaces
 {
     public interface IEtherscanClient
     {
-        Task<Block> GetBlockByNumberAsync(string blockNumber);
+        Task<EthBlockResult> GetBlockByNumberAsync(string blockNumber);
         Task<int> GetBlockTransactionCountByNumberAsync(string blockNumber);
-        Task<Transaction> GetTransactionByBlockNumberAndIndexAsync(string blockNumber, int index);
+        Task<TransactionResult> GetTransactionByBlockNumberAndIndexAsync(string blockNumber, int index);
     }
 }

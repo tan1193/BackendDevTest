@@ -1,13 +1,7 @@
 ﻿using BackendDevTest.Interfaces;
 using BackendDevTest.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendDevTest
 {
@@ -40,12 +34,10 @@ namespace BackendDevTest
                     {
                         var blockRecord = new Block
                         {
-                            BlockNumber = block.BlockNumber,
+                            BlockNumber = Convert.ToInt32(block.Number,16),
                             Hash = block.Hash,
-                            BlockId = block.BlockId,
-                            BlockReward = block.BlockReward,
-                            GasLimit = block.GasLimit,
-                            GasUsed = block.GasUsed,
+                            GasLimit = Convert.ToInt64(block.GasLimit, 16),
+                            GasUsed = Convert.ToInt64(block.GasUsed, 16),
                             Miner = block.Miner,
                             ParentHash = block.ParentHash
                         };
@@ -65,14 +57,13 @@ namespace BackendDevTest
                                     var transactionRecord = new Transaction
                                     {
                                         BlockId = blockRecord.BlockId,
-                                        Hash = transaction.Hash,
-                                        FromAddress = transaction.FromAddress,
-                                        Gas = transaction.Gas,
-                                        GasPrice = transaction.GasPrice,
-                                        TransactionId = transaction.TransactionId,
-                                        ToAddress = transaction.ToAddress,
-                                        TransactionIndex = transaction.TransactionIndex,
-                                        Value = transaction.Value
+                                        Hash = transaction.hash,
+                                        FromAddress = transaction.from,
+                                        Gas = Convert.ToInt64(transaction.gas, 16),
+                                        GasPrice = Convert.ToInt64(transaction.gasPrice, 16),
+                                        ToAddress = transaction.to,
+                                        TransactionIndex = Convert.ToInt32(transaction.transactionIndex, 16),
+                                        Value = Convert.ToInt64(transaction.value, 16)
                                     };
 
                                     _context.Transactions.Add(transactionRecord);

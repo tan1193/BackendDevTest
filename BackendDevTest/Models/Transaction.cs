@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BackendDevTest.Models;
 
-public partial class Transaction
+public record Transaction
 {
     public int TransactionId { get; set; }
 
@@ -25,3 +25,5 @@ public partial class Transaction
 
     public virtual Block Block { get; set; }
 }
+
+

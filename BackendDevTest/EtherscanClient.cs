@@ -1,62 +1,53 @@
 ﻿using BackendDevTest.Interfaces;
 using BackendDevTest.Models;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendDevTest
 {
     public class EtherscanClient : IEtherscanClient
     {
         private readonly HttpClient _httpClient;
-     
-   
-        public EtherscanClient(HttpClient httpClient)
+        private readonly string _apiKey;
+
+        public EtherscanClient(HttpClient httpClient, string apiKey)
         {
             _httpClient = httpClient;
-           
-           
+            _apiKey = apiKey;
+
         }
-      
-    public async Task<Block> GetBlockByNumberAsync(string blockNumber)
+
+        public async Task<EthBlockResult> GetBlockByNumberAsync(string blockNumber)
         {
-            var apiKey = "K58YN3UKZR27URMPJNK3BRGJFPKM9C4JAD";
-            var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}?module=proxy&action=eth_getBlockByNumber&tag={blockNumber}&boolean=true&apikey={apiKey}");
+            var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}?module=proxy&action=eth_getBlockByNumber&tag={blockNumber}&boolean=true&apikey={_apiKey}");
             var content = await response.Content.ReadAsStringAsync();
 
             // Deserialize JSON response into Block object
-            var block = JsonConvert.DeserializeObject<Block>(content);
+            var block = JsonConvert.DeserializeObject<EthBlockResponse>(content);
 
-            return block;
+            return block.Result;
         }
 
         public async Task<int> GetBlockTransactionCountByNumberAsync(string blockNumber)
         {
-            var apiKey = "K58YN3UKZR27URMPJNK3BRGJFPKM9C4JAD";
-            var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}?module=proxy&action=eth_getBlockTransactionCountByNumber&tag={blockNumber}&apikey={apiKey}");
+            var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}?module=proxy&action=eth_getBlockTransactionCountByNumber&tag={blockNumber}&apikey={_apiKey}");
             var content = await response.Content.ReadAsStringAsync();
 
             // Convert hex string to int
-            var count = int.Parse(content, NumberStyles.HexNumber);
+            var count = Convert.ToInt32(JsonConvert.DeserializeObject<BlockNumberResponse>(content).result, 16);
 
             return count;
         }
 
-        public async Task<Transaction> GetTransactionByBlockNumberAndIndexAsync(string blockNumber, int index)
+        public async Task<TransactionResult> GetTransactionByBlockNumberAndIndexAsync(string blockNumber, int index)
         {
-            var apiKey = "K58YN3UKZR27URMPJNK3BRGJFPKM9C4JAD";
-            var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}?module=proxy&action=eth_getTransactionByBlockNumberAndIndex&tag={blockNumber}&index={index}&apikey={apiKey}");
+            var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}?module=proxy&action=eth_getTransactionByBlockNumberAndIndex&tag={blockNumber}&index={index}&apikey={_apiKey}");
             var content = await response.Content.ReadAsStringAsync();
 
             // Deserialize JSON response into Transaction object
-            var transaction = JsonConvert.DeserializeObject<Transaction>(content);
+            var transaction = JsonConvert.DeserializeObject<TransactionResponse>(content);
 
-            return transaction;
+            return transaction.result;
         }
     }
 }
